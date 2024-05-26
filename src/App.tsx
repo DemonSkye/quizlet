@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import questionsData from './questions.json'; // Import the JSON file
+import questionsData from './questions.json';
 
 interface Question {
   id: number;
@@ -43,7 +43,7 @@ const App: React.FC = () => {
   }, [timeLeft, quizStarted, handleNextQuestion]);
 
   const handleStartQuiz = () => {
-    const selectedQuestions = getRandomQuestions(questionsData, 3); // Change 3 to 20 when you have a larger pool
+    const selectedQuestions = getRandomQuestions(questionsData, 3); // todo: add more questions when json pool larger
     setQuestions(selectedQuestions);
     setQuizStarted(true);
   };
@@ -57,7 +57,7 @@ const App: React.FC = () => {
   };
 
   const handleShare = () => {
-    alert('Share button clicked! Implement sharing logic here.');
+    alert('Todo: Implement this button'); //todo: implement button
   };
 
   if (!quizStarted && !quizFinished) {
