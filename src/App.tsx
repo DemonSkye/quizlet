@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
+import questionsData from './questions.json'; // Import the JSON file
 
 interface Question {
   id: number;
@@ -7,6 +8,7 @@ interface Question {
   options: string[];
   answer: string;
 }
+
 const getRandomQuestions = (questionsPool: Question[], numQuestions: number): Question[] => {
   const shuffled = questionsPool.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, numQuestions);
@@ -19,14 +21,7 @@ const App: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(20);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [questionsPool, setQuestionsPool] = useState<Question[]>([]);
   const [quizFinished, setQuizFinished] = useState(false);
-
-  useEffect(() => {
-    fetch('/questions.json')
-        .then(response => response.json())
-        .then((data: Question[]) => setQuestionsPool(data));
-  }, []);
 
   const handleNextQuestion = useCallback(() => {
     setTimeLeft(20);
@@ -48,7 +43,7 @@ const App: React.FC = () => {
   }, [timeLeft, quizStarted, handleNextQuestion]);
 
   const handleStartQuiz = () => {
-    const selectedQuestions = getRandomQuestions(questionsPool, 3); // todo: change to 20 when questions all added to JSON
+    const selectedQuestions = getRandomQuestions(questionsData, 3); // Change 3 to 20 when you have a larger pool
     setQuestions(selectedQuestions);
     setQuizStarted(true);
   };
@@ -62,7 +57,7 @@ const App: React.FC = () => {
   };
 
   const handleShare = () => {
-    alert('Share button clicked!'); //Todo: Social sharing
+    alert('Share button clicked! Implement sharing logic here.');
   };
 
   if (!quizStarted && !quizFinished) {
@@ -70,7 +65,7 @@ const App: React.FC = () => {
         <div className="App">
           <header className="App-header">
             <h1>Welcome to the Quiz</h1>
-            <button onClick={handleStartQuiz} disabled={questionsPool.length === 0}>Start Quiz</button>
+            <button onClick={handleStartQuiz} disabled={questionsData.length === 0}>Start Quiz</button>
           </header>
         </div>
     );
