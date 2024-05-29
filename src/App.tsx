@@ -1,28 +1,35 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './App.css';
 import questionsData from './questions.json';
+import LandingPage from './components/LandingPage/LandingPage';
+import Question from './components/Question/Question';
+import ResultsPage from './components/ResultsPage/ResultsPage';
 
-interface Question {
+// Define the structure of a QuizQuestion object
+interface QuizQuestion {
   id: number;
   question: string;
   options: string[];
   answer: string;
 }
 
-const getRandomQuestions = (questionsPool: Question[], numQuestions: number): Question[] => {
+// Function to get a random subset of questions from the question pool
+const getRandomQuestions = (questionsPool: QuizQuestion[], numQuestions: number): QuizQuestion[] => {
   const shuffled = questionsPool.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, numQuestions);
 };
 
+// Main App component
 const App: React.FC = () => {
+  // State variables
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(20);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [quizFinished, setQuizFinished] = useState(false);
 
+  // Callback to handle moving to the next question
   const handleNextQuestion = useCallback(() => {
     setTimeLeft(20);
     if (currentQuestionIndex < questions.length - 1) {
@@ -33,6 +40,7 @@ const App: React.FC = () => {
     }
   }, [currentQuestionIndex, questions.length]);
 
+  // Effect to handle countdown timer
   useEffect(() => {
     if (timeLeft > 0 && quizStarted) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -42,12 +50,14 @@ const App: React.FC = () => {
     }
   }, [timeLeft, quizStarted, handleNextQuestion]);
 
+  // Function to handle starting the quiz
   const handleStartQuiz = () => {
-    const selectedQuestions = getRandomQuestions(questionsData, 3); // todo: add more questions when json pool larger
+    const selectedQuestions = getRandomQuestions(questionsData, 3); // Change 3 to 20 when you have a larger pool
     setQuestions(selectedQuestions);
     setQuizStarted(true);
   };
 
+  // Function to handle user's answer
   const handleAnswer = (answer: string) => {
     setUserAnswers([...userAnswers, answer]);
     if (answer === questions[currentQuestionIndex].answer) {
@@ -56,48 +66,31 @@ const App: React.FC = () => {
     handleNextQuestion();
   };
 
+  // Function to handle share button click
   const handleShare = () => {
-    alert('Todo: Implement this button'); //todo: implement button
+    alert('Share button clicked! Implement sharing logic here.');
   };
 
+  // Render the appropriate component based on the quiz state
   if (!quizStarted && !quizFinished) {
     return (
-        <div className="App">
-          <header className="App-header">
-            <h1>Welcome to the Quiz</h1>
-            <button onClick={handleStartQuiz} disabled={questionsData.length === 0}>Start Quiz</button>
-          </header>
-        </div>
+        <LandingPage onStart={handleStartQuiz} hasQuestions={questionsData.length > 0} />
     );
   }
 
   if (quizFinished) {
     return (
-        <div className="App">
-          <header className="App-header">
-            <h1>Quiz Finished!</h1>
-            <p>Your score: {score}/{questions.length}</p>
-            <button onClick={handleShare}>Share on Facebook</button>
-          </header>
-        </div>
+        <ResultsPage score={score} totalQuestions={questions.length} onShare={handleShare} />
     );
   }
 
   return (
-      <div className="App">
-        <header className="App-header">
-          <div className="timer-container">
-            <div>Time Remaining</div>
-            <div className="timer-circle">{timeLeft}</div>
-          </div>
-          <h1>{questions[currentQuestionIndex].question}</h1>
-          {questions[currentQuestionIndex].options.map(option => (
-              <button key={option} onClick={() => handleAnswer(option)}>
-                {option}
-              </button>
-          ))}
-        </header>
-      </div>
+      <Question
+          question={questions[currentQuestionIndex].question}
+          options={questions[currentQuestionIndex].options}
+          timeLeft={timeLeft}
+          onAnswer={handleAnswer}
+      />
   );
 }
 

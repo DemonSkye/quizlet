@@ -1,0 +1,33 @@
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #282c34;
+    color: white;
+}
+
+.landing-page h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+button {
+    font-size: 1.5em;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    background-color: #61dafb;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #21a1f1;
+}
+
+button:focus {
+    outline: none;
+}

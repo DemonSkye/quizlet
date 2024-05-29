@@ -14,7 +14,13 @@
   {
     "id": 3,
     "question": "1 + 5 + 9",
-    "options": ["12", "14", "15", "16", "18"],
+    "options": ["12", "14", "15", "16", "Your mom"],
     "answer": "15"
+  },
+  {
+    "id": 4,
+    "question": "Select the letter a",
+    "options": ["a", "b", "c", "d", "e"],
+    "answer": "a"
   }
 ]
