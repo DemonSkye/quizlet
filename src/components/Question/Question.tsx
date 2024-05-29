@@ -1,4 +1,3 @@
-
 import React from 'react';
 import './Question.css';
 
@@ -28,3 +27,4 @@ const Question: React.FC<QuestionProps> = ({ question, options, timeLeft, onAnsw
 }
 
 export default Question;
+
